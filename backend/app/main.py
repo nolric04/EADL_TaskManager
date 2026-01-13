@@ -52,7 +52,7 @@ def import_yaml(payload: str = Body(embed=True)):
         "keys": list(data.keys()) if isinstance(data, dict) else "n/a",
     }
 
-
+# Retourne la liste de tasks
 @app.get("/tasks", response_model=list[TaskOut])
 def list_tasks(db: Session = Depends(get_db)):
     tasks = db.execute(select(Task).order_by(Task.id.desc())).scalars().all()
@@ -73,9 +73,10 @@ def create_task(payload: TaskCreate, db: Session = Depends(get_db)):
 @app.get("/tasks/search", response_model=list[TaskOut])
 def search_tasks(q: str = Query(""), db: Session = Depends(get_db)):
     sql = text(
-        f"SELECT * FROM tasks WHERE title LIKE '%{q}%' OR description LIKE '%{q}%'"
+        "SELECT * FROM tasks WHERE title LIKE '%{}%' OR description LIKE '%{}%'"
     )
-    rows = db.execute(sql).mappings().all()
+    # rows = db.execute(sql).mappings().all()
+    rows = db.execute(sql,(q)).mappings().all()
     return [Task(**r) for r in rows]
 
 
