@@ -3,7 +3,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 from datetime import datetime, timezone
 from .db import Base
 
-
+# Classe Task
 class Task(Base):
     __tablename__ = "tasks"
 
