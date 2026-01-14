@@ -48,7 +48,7 @@ jobs:
         with:
           context: ./backend
           file: ./backend/Dockerfile
-          push: true
+          push: false
           tags: user/app:latest
       - name: UploadImage
         uses: actions/download-artifact@v7
