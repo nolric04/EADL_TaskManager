@@ -74,11 +74,11 @@ jobs:
       - name: checkout repository
         uses: actions/checkout@v3
       - uses: hadolint/hadolint-action@v3.1.0
+        if: always()
         with:
           dockerfile: backend/Dockerfile
           format: 'json'
           output-file: 'resultHadolint.json'
-        continue-on-error: true
       - run: sudo chown runner:runner resultHadolint.json
       - run: ls -la
       - uses: actions/upload-artifact@v5
