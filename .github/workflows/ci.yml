@@ -79,7 +79,7 @@ jobs:
           format: 'json'
           output-file: 'resultHadolint.json'
         continue-on-error: true
-      - run: sudo chown runner:runner .resultHadolint.json
+      - run: sudo chown runner:runner resultHadolint.json
       - run: ls -la
       - uses: actions/upload-artifact@v5
         with:
