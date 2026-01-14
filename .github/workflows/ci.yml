@@ -10,3 +10,41 @@ jobs:
           python-version: "3.x"
       - run: pip install pre-commit
       - run: pre-commit run --all-files
+
+  analyse-dockerfile:
+    name: Checkov
+    runs-on: ubuntu-latest
+    container: bridgecrew/checkov:latest
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v3
+      - name: Install python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: checkout repository
+        uses: actions/checkout@v3
+
+      - name: Run Checkov
+        run: |
+          checkov -d . -o junitxml | tee checkov.test.xml
+
+      - name: Upload Checkov report
+        uses: actions/upload-artifact@v4
+        with:
+          name: checkov-report
+          path: checkov.test.xml
+
+  analyse-trivy:
+    name: Trivy
+    runs-on: ubuntu-latest
+    container: docker.io/aquasec/trivy:latest
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v3
+      - name: BuildImage
+        run: |
+          docker image build backend/Dockerfile taskmanager_trivy:latest
+      - name: Run Trivy
+        run: trivy image taskmanager_trivy:latest
+# Checkov, hadolint, trivy + Construction d'image
