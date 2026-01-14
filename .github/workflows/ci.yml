@@ -78,9 +78,8 @@ jobs:
           dockerfile: backend/Dockerfile
           format: 'json'
           output-file: '.resultHadolint.json'
-        env:
-          HADOLINT_USER: runner
         continue-on-error: true
+      - run: sudo chown runner:runner .resultHadolint.json
       - run: ls -la
       - uses: actions/upload-artifact@v5
         with:
