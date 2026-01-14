@@ -79,6 +79,7 @@ jobs:
           format: 'json'
           output-file: '.resultHadolint.json'
         continue-on-error: true
+      - run: ls -la
       - uses: actions/upload-artifact@v5
         with:
           path: '.resultHadolint.json'
