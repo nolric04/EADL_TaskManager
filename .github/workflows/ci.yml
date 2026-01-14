@@ -73,7 +73,10 @@ jobs:
     steps:
       - name: checkout repository
         uses: actions/checkout@v3
-
+      - name: Install python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
       - uses: hadolint/hadolint-action@v3.1.0
         with:
           dockerfile: backend/Dockerfile
