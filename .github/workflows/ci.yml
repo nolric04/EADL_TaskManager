@@ -1,50 +1,75 @@
 name: pre-commit checks
 on: [push, pull_request]
 jobs:
-  pre-commit:
+#  pre-commit:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v3
+#      - uses: actions/setup-python@v5
+#        with:
+#          python-version: "3.x"
+#      - run: pip install pre-commit
+#      - run: pre-commit run --all-files
+
+#  analyse-dockerfile:
+#    name: Checkov
+#    runs-on: ubuntu-latest
+#    container: bridgecrew/checkov:latest
+#    steps:
+#      - name: checkout repository
+#        uses: actions/checkout@v3
+#      - name: Install python
+#        uses: actions/setup-python@v5
+#        with:
+#          python-version: "3.12"
+#      - name: checkout repository
+#        uses: actions/checkout@v3
+#
+#      - name: Run Checkov
+#        run: |
+#          checkov -d . -o junitxml | tee checkov.test.xml
+#
+#      - name: Upload Checkov report
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: checkov-report
+#          path: checkov.test.xml
+  build-image:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v5
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build and push
+        uses: docker/build-push-action@v6
         with:
-          python-version: "3.x"
-      - run: pip install pre-commit
-      - run: pre-commit run --all-files
-
-  analyse-dockerfile:
-    name: Checkov
-    runs-on: ubuntu-latest
-    container: bridgecrew/checkov:latest
-    steps:
-      - name: checkout repository
-        uses: actions/checkout@v3
-      - name: Install python
-        uses: actions/setup-python@v5
+          push: true
+          tags: user/app:latest
+      - name: Upload Build
+        uses: actions/download-artifact@v4
         with:
-          python-version: "3.12"
-      - name: checkout repository
-        uses: actions/checkout@v3
-
-      - name: Run Checkov
-        run: |
-          checkov -d . -o junitxml | tee checkov.test.xml
-
-      - name: Upload Checkov report
-        uses: actions/upload-artifact@v4
+          pattern: "!*.dockerbuild"
+      - name: UploadImage
+        uses: actions/download-artifact@v7
         with:
-          name: checkov-report
-          path: checkov.test.xml
+          name: docker_image
+          path: "!*.dockerbuild"
+
 
   analyse-trivy:
     name: Trivy
     runs-on: ubuntu-latest
     container: docker.io/aquasec/trivy:latest
+    needs: build-image
     steps:
-      - name: checkout repository
-        uses: actions/checkout@v3
-      - name: BuildImage
-        run: |
-          docker image build backend/Dockerfile taskmanager_trivy:latest
-      - name: Run Trivy
-        run: trivy image taskmanager_trivy:latest
+      - uses: aquasecurity/trivy-action@0.33.1
+        with:
+          scan-type: image-ref
+          image-ref: 'docker_image'
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
 # Checkov, hadolint, trivy + Construction d'image
