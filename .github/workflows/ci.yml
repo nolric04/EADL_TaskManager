@@ -72,4 +72,4 @@ jobs:
           ignore-unfixed: true
           vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH'
- Checkov, hadolint, trivy + Construction d'image
+# Checkov, hadolint, trivy + Construction d'image
