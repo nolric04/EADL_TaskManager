@@ -49,29 +49,18 @@ jobs:
           context: ./backend
           file: ./backend/Dockerfile
           push: false
-          tags: user/app:latest
+          tags: backend:latest
       - name: UploadImage
         uses: actions/upload-artifact@v6
         with:
           name: docker_image
           path: "!*.dockerbuild"
 
-
-  analyse-trivy:
-    name: Trivy
-    runs-on: ubuntu-latest
-    container: docker.io/aquasec/trivy:latest
-    needs: build-image
-    steps:
-      - name: DownloadImages
-        uses: actions/upload-artifact@v6
-        with:
-          name: docker_image
-          path: '!*.dockerbuild'
-      - uses: aquasecurity/trivy-action@0.33.1
+      - name: Utilisation Trivy
+        uses: aquasecurity/trivy-action@0.33.1
         with:
           scan-type: image-ref
-          image-ref: 'docker_image'
+          image-ref: 'backend:latest'
           format: 'table'
           exit-code: '1'
           ignore-unfixed: true
