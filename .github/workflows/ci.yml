@@ -61,7 +61,7 @@ jobs:
         uses: aquasecurity/trivy-action@0.33.1
         with:
           scan-type: image
-          image-ref: 'docker.io/nolric/tests_eadl/backend:latest'
+          image-ref: 'docker.io/nolric/tests_eadl:backend_latest'
           format: 'table'
           exit-code: '1'
           ignore-unfixed: true
