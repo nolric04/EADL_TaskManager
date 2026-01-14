@@ -37,6 +37,12 @@ jobs:
   build-image:
     runs-on: ubuntu-latest
     steps:
+      - name: auth
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_KEY }}
+
       - name: checkout repository
         uses: actions/checkout@v3
       - name: Set up QEMU
@@ -48,14 +54,14 @@ jobs:
         with:
           context: ./backend
           file: ./backend/Dockerfile
-          push: false
-          tags: backend:latest
+          push: true
+          tags: nolric/tests_eadl:backend_latest
 
       - name: Utilisation Trivy
         uses: aquasecurity/trivy-action@0.33.1
         with:
           scan-type: image
-          image-ref: 'backend:latest'
+          image-ref: 'docker.io/nolric/tests_eadl/backend:latest'
           format: 'table'
           exit-code: '1'
           ignore-unfixed: true
