@@ -77,13 +77,13 @@ jobs:
         with:
           dockerfile: backend/Dockerfile
           format: 'json'
-          output-file: '.resultHadolint.json'
+          output-file: 'resultHadolint.json'
         continue-on-error: true
       - run: sudo chown runner:runner .resultHadolint.json
       - run: ls -la
       - uses: actions/upload-artifact@v5
         with:
-          path: '.resultHadolint.json'
+          path: 'resultHadolint.json'
 
 
 # Checkov, hadolint, trivy + Construction d'image
