@@ -78,6 +78,8 @@ jobs:
           dockerfile: backend/Dockerfile
           format: 'json'
           output-file: '.resultHadolint.json'
+        env:
+          HADOLINT_USER: runner
         continue-on-error: true
       - run: ls -la
       - uses: actions/upload-artifact@v5
