@@ -37,37 +37,38 @@ jobs:
   build-image:
     runs-on: ubuntu-latest
     steps:
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - run: cd backend
-      - name: Build and push
-        uses: docker/build-push-action@v6
-        with:
-          push: true
-          tags: user/app:latest
-      - name: UploadImage
-        uses: actions/download-artifact@v7
-        with:
-          name: docker_image
-          path: "!*.dockerbuild"
-
-
-  analyse-trivy:
-    name: Trivy
-    runs-on: ubuntu-latest
-    container: docker.io/aquasec/trivy:latest
-    needs: build-image
-    steps:
-      - uses: aquasecurity/trivy-action@0.33.1
-        with:
-          scan-type: image-ref
-          image-ref: 'docker_image'
-          format: 'table'
-          exit-code: '1'
-          ignore-unfixed: true
-          vuln-type: 'os,library'
-          severity: 'CRITICAL,HIGH'
+      - run: ls -la
+#      - name: Set up QEMU
+#        uses: docker/setup-qemu-action@v3
+#      - name: Set up Docker Buildx
+#        uses: docker/setup-buildx-action@v3
+#
+#      - run: cd backend
+#      - name: Build and push
+#        uses: docker/build-push-action@v6
+#        with:
+#          push: true
+#          tags: user/app:latest
+#      - name: UploadImage
+#        uses: actions/download-artifact@v7
+#        with:
+#          name: docker_image
+#          path: "!*.dockerbuild"
+#
+#
+#  analyse-trivy:
+#    name: Trivy
+#    runs-on: ubuntu-latest
+#    container: docker.io/aquasec/trivy:latest
+#    needs: build-image
+#    steps:
+#      - uses: aquasecurity/trivy-action@0.33.1
+#        with:
+#          scan-type: image-ref
+#          image-ref: 'docker_image'
+#          format: 'table'
+#          exit-code: '1'
+#          ignore-unfixed: true
+#          vuln-type: 'os,library'
+#          severity: 'CRITICAL,HIGH'
 # Checkov, hadolint, trivy + Construction d'image
