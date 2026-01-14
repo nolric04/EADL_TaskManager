@@ -50,16 +50,11 @@ jobs:
           file: ./backend/Dockerfile
           push: false
           tags: backend:latest
-      - name: UploadImage
-        uses: actions/upload-artifact@v6
-        with:
-          name: docker_image
-          path: "!*.dockerbuild"
 
       - name: Utilisation Trivy
         uses: aquasecurity/trivy-action@0.33.1
         with:
-          scan-type: image-ref
+          scan-type: image
           image-ref: 'backend:latest'
           format: 'table'
           exit-code: '1'
