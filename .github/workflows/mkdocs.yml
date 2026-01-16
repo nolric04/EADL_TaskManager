@@ -1,7 +1,7 @@
 name: deploy mkdocs
 on: [push, pull_request]
-env:
-  GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN_PAGES }}
+permissions:
+  contents: write
 jobs:
   pre-commit:
     runs-on: ubuntu-latest
@@ -10,4 +10,4 @@ jobs:
       - uses: actions/setup-python@v5
       - run: pip install mkdocs
       - run: pip install mkdocs-material
-      - run: mkdocs gh-deploy
+      - run: mkdocs gh-deploy --force
