@@ -2,6 +2,7 @@ name: deploy mkdocs
 on: [push, pull_request]
 permissions:
   contents: write
+  pages: write
   id-token: write
 jobs:
   pre-commit:
