@@ -1,0 +1,11 @@
+name: deploy mkdocs
+on: [push, pull_request]
+
+jobs:
+  pre-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v5
+      - run: pip install mkdocs
+      - run: mkdocs gh-deploy
