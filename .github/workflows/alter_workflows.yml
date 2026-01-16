@@ -1,0 +1,65 @@
+#name: CI/CD Backend (src/backend)
+#on:
+#  push:
+#    branches: [ "main" ]
+#    paths:
+#      - 'src/backend/**'
+#      - '.github/workflows/**'
+#    pull_request:
+#      branches: [ "main" ]
+#      paths:
+#        - 'src/backend/**'
+#env:
+#  REGISTRY: docker.io
+#  IMAGE_NAME: ton-image/de-zozo
+#  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+#  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+#jobs:
+#  lint-and-security:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v5
+#      - name: Lint Dockerfile with Hadolint
+#        uses: hadolint/hadolint-action@v3.1.0
+#        with:
+#          dockerfile: src/backend/Dockerfile
+#      - name: Run Checkov
+#        uses: bridgecrewio/checkov-action@master
+#        with:
+#          directory: src/backend
+#          framework:
+#                dockerfile          soft_fail:
+#                  true  build-scan-push:
+#                    needs:
+#                      lint-and-security    runs-on:
+#                        ubuntu-latest    steps:
+#                          - uses:
+#                              actions/checkout@v5      - name:
+#                                Set up Docker Buildx        uses:
+#                                  docker/setup-buildx-action@v3      - name:
+#                                    Login to Docker Hub        if:
+#                                      github.event_name != 'pull_request'        uses:
+#                                        docker/login-action@v3        with:
+#                                          username:
+#                                            ${{ env.DOCKER_USERNAME }}          password:
+#                                              ${{ env.DOCKER_PASSWORD }}      - name:
+#                                                Build Docker image        uses:
+#                                                  docker/build-push-action@v5        with:
+#                                                    context:
+#                                                      src/backend             file:
+#                                                        src/backend/Dockerfile          load:
+#                                                          true          tags:
+#                                                            ${{ env.IMAGE_NAME }}:${{ github.sha }}          cache-from:
+#                                                              type=gha          cache-to:
+#                                                                type=gha,mode=max      - name:
+#                                                                  Run Trivy vulnerability scanner        uses:
+#                                                                    aquasecurity/trivy-action@master        with:
+#                                                                      image-ref: '${{ env.IMAGE_NAME }}:${{ github.sha }}'          format: 'table'          exit-code: '1'          ignore-unfixed:
+#                                                                                                                                                                                       true          vuln-type: 'os,library'          severity: 'CRITICAL,HIGH'      - name:
+#                                                                                                                                                                                                                                                                         Push image        if:
+#                                                                                                                                                                                                                                                                           github.event_name != 'pull_request'        uses:
+#                                                                                                                                                                                                                                                                             docker/build-push-action@v6        with:
+#                                                                                                                                                                                                                                                                               context:
+#                                                                                                                                                                                                                                                                                 src/backend          file:
+#                                                                                                                                                                                                                                                                                   src/backend/Dockerfile          push:
+#                                                                                                                                                                                                                                                                                     true          tags: |            ${{ env.IMAGE_NAME }}:${{ github.sha }}            ${{ env.IMAGE_NAME }}:latest
