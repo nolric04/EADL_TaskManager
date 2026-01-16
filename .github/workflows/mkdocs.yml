@@ -1,6 +1,7 @@
 name: deploy mkdocs
 on: [push, pull_request]
-
+env:
+  GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN_PAGES }}
 jobs:
   pre-commit:
     runs-on: ubuntu-latest
