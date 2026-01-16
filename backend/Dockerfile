@@ -1,5 +1,7 @@
 FROM python:3.12
-
+LABEL maintainer="Nolric"
+LABEL description="Pwet"
+LABEL version=1.0
 WORKDIR /app
 COPY . /app/
 
