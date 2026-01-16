@@ -1,4 +1,4 @@
-name: sonar
+name: sonarQube
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    name: Build and analyze
+    name: Build and analyze with sonar
     runs-on: ubuntu-latest
 
     steps:
