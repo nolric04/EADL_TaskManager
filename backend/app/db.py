@@ -6,7 +6,8 @@ DATABASE_URL = "sqlite:///./taskmanager.db"
 
 engine = create_engine(
     DATABASE_URL,
-    connect_args={"check_same_thread": False},  # needed for SQLite + threads
+    # needed for SQLite + threads
+    connect_args={"check_same_thread": False},
 )
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -15,8 +16,9 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 class Base(DeclarativeBase):
     pass
 
-# Récupère une session db
+
 def get_db():
+    """Récupère une session db"""
     db = SessionLocal()
     try:
         yield db
