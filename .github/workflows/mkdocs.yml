@@ -2,6 +2,7 @@ name: deploy mkdocs
 on: [push, pull_request]
 permissions:
   contents: write
+  id-token: write
 jobs:
   pre-commit:
     runs-on: ubuntu-latest
